@@ -22,10 +22,4 @@ class AlbumDetailsViewControllerTests: XCTestCase {
         XCTAssert(albumDetailsViewController.albumDetailsTextView.text == album.description,
                   "Descriptions do not match")
     }
-
-    func testPresentStoreProductViewController() {
-        let button = albumDetailsViewController.iTunesButton
-        albumDetailsViewController.presentStoreProductViewController(button)
-        XCTAssertFalse(button.isEnabled, "Button should be disabled")
-    }
 }
