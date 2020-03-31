@@ -78,7 +78,7 @@ class AlbumDetailsViewController: UIViewController {
         button.backgroundColor = .black
         button.setContentHuggingPriority(.defaultHigh, for: .vertical)
         button.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-        button.addTarget(self, action: #selector(presentStoreProductViewController), for: .touchUpInside)
+        button.addTarget(self, action: #selector(navigateToStore), for: .touchUpInside)
         return button
     }()
 
@@ -115,29 +115,16 @@ class AlbumDetailsViewController: UIViewController {
                                                  multiplier: AlbumDetailsViewController.buttonHeightToWidthRatio)
         ])
     }
-}
-
-// MARK: - SKStoreProductViewControllerDelegate Protocol
-
-extension AlbumDetailsViewController: SKStoreProductViewControllerDelegate {
-    @objc func presentStoreProductViewController(_ sender: UIButton) {
+    
+    @objc func navigateToStore(_ sender: UIButton) {
         sender.isEnabled = false
-        guard let idString = album?.id, let id = Int(idString) else { return }
-        
-        let storeViewController = SKStoreProductViewController()
-        storeViewController.delegate = self
-        let parametersDict = [SKStoreProductParameterITunesItemIdentifier: id]
-        storeViewController.loadProduct(withParameters: parametersDict) { (success, error) in
+        guard let urlString = album?.url, let url = URL(string: urlString) else { 
             sender.isEnabled = true
-
-            if success {
-                self.present(storeViewController, animated: true, completion: nil)
-                return
-            }
-            
-            if let error = error {
-                debugPrint("Error: \(error.localizedDescription)")
-            }
+            return
         }
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+        sender.isEnabled = true
     }
 }
